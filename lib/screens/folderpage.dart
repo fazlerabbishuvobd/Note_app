@@ -36,7 +36,9 @@ class _FolderPageState extends State<FolderPage> {
             } else if (snapshot.hasError) {
               return Text(snapshot.hasError.toString());
             } else if (snapshot.hasData) {
-              return GridView.builder(
+
+              return snapshot.data!.isEmpty? const Center(child: Text('No Folder')):
+              GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
                     crossAxisSpacing: 3,

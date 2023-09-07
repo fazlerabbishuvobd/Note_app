@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:note_app/bottomnavbarpage.dart';
+import 'package:note_app/screens/splash_screen.dart';
 
 
 void main(){
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const BottomNavBarPage(),
+      home: const SplashScreen(),
     );
   }
 }

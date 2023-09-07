@@ -20,77 +20,7 @@ class _ProfilePageState extends State<ProfilePage> {
           children: [
             InkWell(
               onTap: () {
-                showModalBottomSheet(
-                    context: context,
-                    builder: (context) => Container(
-                          alignment: Alignment.center,
-                          padding: const EdgeInsets.all(10),
-                          height: MediaQuery.sizeOf(context).height * 0.15,
-                          width: MediaQuery.sizeOf(context).width,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Container(
-                                height: 10,
-                                width: 100,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    color: Colors.amber),
-                              ),
-                              const Spacer(),
-                              const Text(
-                                'Choose Profile Picture From',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 16),
-                              ),
-                              const Spacer(),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  MaterialButton(
-                                    onPressed: () {},
-                                    color: Colors.amber,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: const Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Text('Camera'),
-                                        Icon(Icons.camera_alt_rounded)
-                                      ],
-                                    ),
-                                  ),
-                                  MaterialButton(
-                                    onPressed: () {},
-                                    color: Colors.amber,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: const Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Text('Gallery'),
-                                        Icon(Icons.image_rounded)
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height:
-                                    MediaQuery.sizeOf(context).height * 0.02,
-                              )
-                            ],
-                          ),
-                        ),
-                    isDismissible: true,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15))
-                );
+                _buildShowModalBottomSheet(context);
               },
               child: const CircleAvatar(
                 radius: 90,
@@ -110,6 +40,80 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         ),
       ),
+    );
+  }
+
+  Future<dynamic> _buildShowModalBottomSheet(BuildContext context) {
+    return showModalBottomSheet(
+        context: context,
+        builder: (context) => Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(10),
+              height: MediaQuery.sizeOf(context).height * 0.16,
+              width: MediaQuery.sizeOf(context).width,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 10,
+                    width: 100,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.amber),
+                  ),
+                  const Spacer(),
+                  const Text(
+                    'Choose Profile Picture From',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                  const Spacer(),
+                  Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.spaceAround,
+                    children: [
+                      MaterialButton(
+                        onPressed: () {},
+                        color: Colors.amber,
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(10)),
+                        child: const Row(
+                          mainAxisAlignment:
+                              MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text('Camera'),
+                            Icon(Icons.camera_alt_rounded)
+                          ],
+                        ),
+                      ),
+                      MaterialButton(
+                        onPressed: () {},
+                        color: Colors.amber,
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(10)),
+                        child: const Row(
+                          mainAxisAlignment:
+                              MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text('Gallery'),
+                            Icon(Icons.image_rounded)
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height:
+                        MediaQuery.sizeOf(context).height * 0.02,
+                  )
+                ],
+              ),
+            ),
+        isDismissible: true,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15))
     );
   }
 
