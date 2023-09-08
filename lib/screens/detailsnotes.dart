@@ -36,7 +36,16 @@ class _DetailsNotesState extends State<DetailsNotes> {
     return Screenshot(
       controller: _screenshotController,
       child: Scaffold(
-        appBar: _buildAppBar(context),
+
+        appBar: AppBar(
+          title: Text(widget.folderName == null ? 'Folder: Unknown' : '${widget.folderName}'),
+          centerTitle: true,
+          backgroundColor: Colors.amber,
+          actions: [
+            _buildShareButton(context)
+          ],
+        ),
+
         body: SingleChildScrollView(
           child: Container(
             margin: const EdgeInsets.all(10),
@@ -46,7 +55,14 @@ class _DetailsNotesState extends State<DetailsNotes> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
 
-                  _buildTitle(),
+                  //Note Title
+                  RichText(
+                  text: TextSpan(text: 'Title: ', style: const TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),
+                      children: [
+                        TextSpan(text: widget.title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.normal))
+                      ])
+                  ),
+
                   const Divider(),
 
                   Text(widget.description ?? 'Write Description')
@@ -66,7 +82,7 @@ class _DetailsNotesState extends State<DetailsNotes> {
             children: [
               Icon(widget.isStared != 1 ? Icons.star_border : Icons.star),
 
-              //<----------------- Edit Note Button ---------------------->
+              //Edit Note Button
               IconButton(
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -79,9 +95,10 @@ class _DetailsNotesState extends State<DetailsNotes> {
                       ),
                     ));
                   },
-                  icon: const Icon(Icons.edit)),
+                  icon: const Icon(Icons.edit)
+              ),
 
-              //<-------------- Time ------------->
+              //Time
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -95,35 +112,12 @@ class _DetailsNotesState extends State<DetailsNotes> {
     );
   }
 
-  RichText _buildTitle() {
-    return RichText(
-      text: TextSpan(
-          text: 'Title: ',
-          style: const TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),
-          children: [
-        TextSpan(text: widget.title,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.normal))
-      ])
-    );
-  }
-
-  AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-        title: Text(widget.folderName == null ? 'Folder: Unknown' : '${widget.folderName}'),
-        centerTitle: true,
-        backgroundColor: Colors.amber,
-        actions: [
-          _buildShareButton(context)
-        ],
-      );
-  }
 
   IconButton _buildShareButton(BuildContext context) {
     return IconButton(
         onPressed: () {
         showModalBottomSheet(
-          context: context,
-          builder: (context) =>
+            context: context, builder: (context) =>
           Container(
             alignment: Alignment.center,
             padding: const EdgeInsets.all(10),
@@ -132,18 +126,20 @@ class _DetailsNotesState extends State<DetailsNotes> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+
                 Container(
                   height: 10,
                   width: 100,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: Colors.amber),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: Colors.amber),
                 ),
                 const Spacer(),
+
                 const Text('Choose Notes Sharing Method',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 const Spacer(),
+
+                //Button
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [

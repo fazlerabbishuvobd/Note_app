@@ -23,7 +23,19 @@ class _StaredPageState extends State<StaredPage> {
     double width = MediaQuery.sizeOf(context).width;
 
     return Scaffold(
-      appBar: _buildAppBar(height),
+      appBar: AppBar(
+        title: const Text('Stared'),
+        centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () {
+                setState(() {});
+              },
+              icon: const Icon(Icons.refresh)),
+        ],
+        backgroundColor: Colors.amber,
+        toolbarHeight: height * 0.1,
+      ),
 
       body: Container(
         padding: const EdgeInsets.all(10),
@@ -31,7 +43,7 @@ class _StaredPageState extends State<StaredPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            //<------------ Folder ---------------------->
+            //Folder
             FutureBuilder<List<Notes>?>(
               future: DatabaseHelper.getAllStaredFolder(),
               builder: (context, AsyncSnapshot<List<Notes>?> snapshot) {
@@ -40,15 +52,15 @@ class _StaredPageState extends State<StaredPage> {
                 } else if (snapshot.hasError) {
                   return Text(snapshot.hasError.toString());
                 } else if (snapshot.hasData) {
-                  //<-------- Main Part --------->
 
+                  // Main Part
                   folderAmount = snapshot.data!.length;
                   return Column(
                     children: [
-                      //<-------------- Folder Title ------------->
+                      //Folder Title
                       _buildFolderTitle(),
 
-                      //<-------------- Folder Main Body ------------->
+                      //Folder Main Body
                       Container(
                         padding: const EdgeInsets.all(5),
                         height: height * 0.12,
@@ -61,7 +73,7 @@ class _StaredPageState extends State<StaredPage> {
                               var data = snapshot.data![index];
                               folderAmount = snapshot.data!.length;
 
-                              //<-------- Folder List Structure --------->
+                              //Folder List Structure
                               return GestureDetector(
                                 onTap: () {
                                   debugPrint('Details of Folder $index');
@@ -70,10 +82,38 @@ class _StaredPageState extends State<StaredPage> {
                                 },
                                 child: Stack(
                                   children: [
-                                    _buildFolderBody(width, data),
 
-                                    //<-------------- Stared Button ------------->
-                                    _buildFolderStaredButton(width, data, context),
+                                    //Folder Body
+                                    Container(
+                                        margin: const EdgeInsets.only(right: 10),
+                                        alignment: Alignment.center,
+                                        padding: const EdgeInsets.all(5),
+                                        width: width * 0.3,
+                                        decoration: const BoxDecoration(
+                                            image: DecorationImage(image: AssetImage('assets/images/folders.png'), fit: BoxFit.cover)
+                                        ),
+                                        child: Text('${data.category}',
+                                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                                          overflow: TextOverflow.ellipsis,
+                                        )
+                                    ),
+
+                                    //Stared Button
+                                    Positioned(
+                                      left: width * 0.01,
+                                      child: IconButton(
+                                          onPressed: () {
+                                            DatabaseHelper.isStaredFolder(data, 0);
+                                            DatabaseHelper.removeStaredFolder(data).then((value) {
+                                              setState(() {});
+                                            }).then((value) {
+                                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                                  content: Text('Remove Folder From Stared Successfully')));
+                                            });
+                                          },
+                                          icon: const Icon(Icons.star)
+                                      ),
+                                    ),
                                   ],
                                 ),
                               );
@@ -91,7 +131,7 @@ class _StaredPageState extends State<StaredPage> {
               },
             ),
 
-            //<------------ All Notes ---------------------->
+            //All Notes
             FutureBuilder<List<Notes>?>(
               future: DatabaseHelper.getAllStaredNotes(),
               builder: (context, AsyncSnapshot<List<Notes>?> snapshot) {
@@ -250,38 +290,7 @@ class _StaredPageState extends State<StaredPage> {
     );
   }
 
-  Positioned _buildFolderStaredButton(double width, Notes data, BuildContext context) {
-    return Positioned(
-      left: width * 0.01,
-      child: IconButton(
-          onPressed: () {
-            DatabaseHelper.isStaredFolder(data, 0);
-            DatabaseHelper.removeStaredFolder(data).then((value) {
-              setState(() {});
-            }).then((value) {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text('Remove Folder From Stared Successfully')));
-            });
-          },
-          icon: const Icon(Icons.star)),
-    );
-  }
 
-  Container _buildFolderBody(double width, Notes data) {
-    return Container(
-      margin: const EdgeInsets.only(right: 10),
-      alignment: Alignment.center,
-      padding: const EdgeInsets.all(5),
-      width: width * 0.3,
-      decoration: const BoxDecoration(
-          image: DecorationImage(image: AssetImage('assets/images/folders.png'), fit: BoxFit.cover)
-      ),
-      child: Text('${data.category}',
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-        overflow: TextOverflow.ellipsis,
-      )
-  );
-  }
 
   Row _buildFolderTitle() {
     return Row(
@@ -301,19 +310,4 @@ class _StaredPageState extends State<StaredPage> {
     );
   }
 
-  AppBar _buildAppBar(double height) {
-    return AppBar(
-      title: const Text('Stared'),
-      centerTitle: true,
-      actions: [
-        IconButton(
-            onPressed: () {
-              setState(() {});
-            },
-            icon: const Icon(Icons.refresh)),
-      ],
-      backgroundColor: Colors.amber,
-      toolbarHeight: height * 0.1,
-    );
-  }
 }

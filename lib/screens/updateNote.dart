@@ -47,18 +47,49 @@ class _UpdateNotesState extends State<UpdateNotes> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(context),
+      appBar: AppBar(
+        title: const Text('Update Your Note'),
+        centerTitle: true,
+        backgroundColor: Colors.amber,
+        actions: [
+
+          //Update Note Button
+          IconButton(
+              onPressed: () {
+                Notes updateNotes = Notes(
+                  id: widget.id,
+                  title: _titleController.text,
+                  description: _descriptionController.text,
+                  dateTime: DateTime.now().toString(),
+                  category: widget.folderName ?? 'No Category',
+                  isStared: widget.isStared,
+                );
+                DatabaseHelper.updateNote(updateNotes);
+                DatabaseHelper.updateStaredNote(updateNotes);
+                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const BottomNavBarPage(),), (route) => false);
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: const Text('Note Updated Successfully'),
+                  action: SnackBarAction(label: 'Close', onPressed: () {}),
+                )
+                );
+              },
+              icon: const Icon(Icons.save)
+          )
+        ],
+      ),
+
+
       body: Container(
         padding: const EdgeInsets.all(10),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              //<------------ Note Title -------------------->
+              //Note Title
               const Text('Title', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               CustomTextField(controller: _titleController, hint: 'Title', line: 2),
 
-              //<------------ Note Folder -------------------->
+              //Note Folder
               const Text('Folder', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               Container(
                   alignment: Alignment.center,
@@ -71,10 +102,12 @@ class _UpdateNotesState extends State<UpdateNotes> {
                   child: Text('${widget.folderName}')
               ),
 
-              //<------------ Note Description -------------------->
+
               const SizedBox(
                 height: 20,
               ),
+
+              //Note Description
               const Text('Description',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
@@ -90,39 +123,4 @@ class _UpdateNotesState extends State<UpdateNotes> {
     );
   }
 
-  AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-      title: const Text('Update Your Note'),
-      centerTitle: true,
-      backgroundColor: Colors.amber,
-      actions: [
-        //Update Note Button
-        _buildUpdateNoteButton(context)
-      ],
-    );
-  }
-
-  IconButton _buildUpdateNoteButton(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        Notes updateNotes = Notes(
-          id: widget.id,
-          title: _titleController.text,
-          description: _descriptionController.text,
-          dateTime: DateTime.now().toString(),
-          category: widget.folderName ?? 'No Category',
-          isStared: widget.isStared,
-        );
-        DatabaseHelper.updateNote(updateNotes);
-        DatabaseHelper.updateStaredNote(updateNotes);
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const BottomNavBarPage(),), (route) => false);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: const Text('Note Updated Successfully'),
-          action: SnackBarAction(label: 'Close', onPressed: () {}),
-        )
-        );
-      },
-      icon: const Icon(Icons.save)
-    );
-  }
 }

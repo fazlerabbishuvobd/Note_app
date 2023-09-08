@@ -40,7 +40,7 @@ class _AddNotesState extends State<AddNotes> {
         centerTitle: true,
         backgroundColor: Colors.amber,
         actions: [
-          //<-------------- Save Note Button ------------->
+          //Save Button
           IconButton(
               onPressed: () {
                 Notes addNotes = Notes(
@@ -51,24 +51,25 @@ class _AddNotesState extends State<AddNotes> {
 
                 //<-------------- add note function ------------->
                 DatabaseHelper.addNote(addNotes);
-                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                      builder: (context) => const BottomNavBarPage(),
-                    ), (route) => false);
+                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                const BottomNavBarPage(),), (route) => false);
               },
-              icon: const Icon(Icons.save))
+              icon: const Icon(Icons.save)
+          )
         ],
       ),
+
       body: Container(
         padding: const EdgeInsets.all(10),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              //<------------ Note Title -------------------->
+              //Note Title
               const Text('Title', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               CustomTextField(controller: _titleController, hint: 'Title', line: 2),
 
-              //<------------ Note Folder -------------------->
+              //Note Folder
               const Text('Folder', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               Container(
                   alignment: Alignment.center,
@@ -78,15 +79,17 @@ class _AddNotesState extends State<AddNotes> {
                     border: Border.all(color: Colors.black, width: 1),
                     color: Colors.amber,
                   ),
-                  child: Text(widget.folderName == null?'No Category':'${widget.folderName}')),
+                  child: Text(widget.folderName == null?'No Category':'${widget.folderName}')
+              ),
 
-              //<------------ Note Description -------------------->
+              // Note Description
               const SizedBox(
                 height: 20,
               ),
               const Text('Description',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
+
               CustomTextField(
                   controller: _descriptionController,
                   hint: 'Write descriptions....',
