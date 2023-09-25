@@ -49,7 +49,7 @@ class _BottomNavBarPageState extends State<BottomNavBarPage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: AnimatedBottomNavigationBar(
-        barColor: Colors.amber,
+        barColor: Theme.of(context).primaryColor,
         controller: FloatingBottomBarController(initialIndex: 0),
         bottomBar: [
           //Home

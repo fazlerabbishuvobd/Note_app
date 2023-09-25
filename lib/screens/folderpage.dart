@@ -27,9 +27,9 @@ class _FolderPageState extends State<FolderPage> {
     return Scaffold(
 
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: const Text('All Folders'),
         centerTitle: true,
-        backgroundColor: Colors.amber,
         actions: [
 
           //Create New Folder Button

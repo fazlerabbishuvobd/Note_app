@@ -33,7 +33,7 @@ class _StaredPageState extends State<StaredPage> {
               },
               icon: const Icon(Icons.star)),
         ],
-        backgroundColor: Colors.amber,
+        backgroundColor: Theme.of(context).primaryColor,
         toolbarHeight: height * 0.1,
       ),
 
@@ -277,7 +277,6 @@ class _StaredPageState extends State<StaredPage> {
           ],
         ),
       ),
-      backgroundColor: Colors.white,
     );
   }
 

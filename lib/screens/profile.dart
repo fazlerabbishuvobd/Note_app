@@ -12,9 +12,9 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: const Text('Profile'),
         centerTitle: true,
-        backgroundColor: Colors.amber,
       ),
       body: Container(
         alignment: Alignment.center,
@@ -26,10 +26,10 @@ class _ProfilePageState extends State<ProfilePage> {
               onTap: () {
                 _buildShowModalBottomSheet(context);
               },
-              child: const CircleAvatar(
+              child: CircleAvatar(
+                backgroundColor: Theme.of(context).primaryColor,
                 radius: 90,
-                backgroundColor: Colors.amber,
-                child: CircleAvatar(
+                child: const CircleAvatar(
                   radius: 80,
                   backgroundImage: AssetImage('assets/images/fazlerabbi.jpg'),
                 ),
@@ -78,7 +78,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     width: 100,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
-                        color: Colors.amber
                     ),
                   ),
                   const Spacer(),
@@ -93,7 +92,6 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                       MaterialButton(
                         onPressed: () {},
-                        color: Colors.amber,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)
                         ),
@@ -107,7 +105,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       MaterialButton(
                         onPressed: () {},
-                        color: Colors.amber,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)
                         ),
@@ -153,7 +150,7 @@ class CustomCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
           side: const BorderSide(color: Colors.black, width: 1)
       ),
-      color: Colors.amber,
+
       child: SizedBox(
         height: 50,
         child: Padding(

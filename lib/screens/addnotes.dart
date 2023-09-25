@@ -38,7 +38,7 @@ class _AddNotesState extends State<AddNotes> {
       appBar: AppBar(
         title: const Text('Add New Note'),
         centerTitle: true,
-        backgroundColor: Colors.amber,
+        backgroundColor: Theme.of(context).primaryColor,
         actions: [
           //Save Button
           IconButton(

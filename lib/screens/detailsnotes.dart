@@ -38,9 +38,9 @@ class _DetailsNotesState extends State<DetailsNotes> {
       child: Scaffold(
 
         appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
           title: Text(widget.folderName == null ? 'Folder: Unknown' : '${widget.folderName}'),
           centerTitle: true,
-          backgroundColor: Colors.amber,
           actions: [
             _buildShareButton(context)
           ],
@@ -76,7 +76,7 @@ class _DetailsNotesState extends State<DetailsNotes> {
         bottomNavigationBar: Container(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           alignment: Alignment.center,
-          color: Colors.amber,
+          color: Theme.of(context).primaryColor,
           width: MediaQuery.of(context).size.width,
           height: 50,
           child: Row(

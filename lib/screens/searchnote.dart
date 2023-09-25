@@ -22,8 +22,8 @@ class _SearchNoteState extends State<SearchNote> {
     double width = MediaQuery.sizeOf(context).width;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         leading: const Text(''),
-        backgroundColor: Colors.amber,
         bottom: PreferredSize(
             preferredSize: const Size.fromHeight(30),
             child: Row(
@@ -193,7 +193,6 @@ class _SearchNoteState extends State<SearchNote> {
 
   PopupMenuButton<dynamic> _buildPopUpMenuButton(Notes data) {
     return PopupMenuButton(
-      color: Colors.amber,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10)
       ),

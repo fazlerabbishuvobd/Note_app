@@ -6,10 +6,12 @@ import 'package:note_app/screens/folderpage.dart';
 import 'package:note_app/screens/searchnote.dart';
 import 'package:note_app/screens/updateNote.dart';
 import 'package:note_app/services/databasehelper.dart';
+import 'package:note_app/services/theme_services.dart';
 import 'package:note_app/widgets/commonwidgets/customIconButton.dart';
 import 'package:note_app/widgets/commonwidgets/customdialoguebox.dart';
 import 'package:note_app/widgets/commonwidgets/notelisttile.dart';
 import 'package:note_app/widgets/homepage/homepagewidget.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -36,21 +38,41 @@ class _HomePageState extends State<HomePage> {
     double height = MediaQuery.sizeOf(context).height;
     double width = MediaQuery.sizeOf(context).width;
 
+    final themeProvider = Provider.of<ThemeServices>(context,listen: false);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Note App'),
         centerTitle: true,
-        leading: IconButton(onPressed: () {}, icon: const Icon(Icons.menu)),
+        leading: const Icon(Icons.menu),
         actions: [
-          CustomIconButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const SearchNote())
-              );
-            }, icon: Icons.search,
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Row(
+              children: [
+                CustomIconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => const SearchNote())
+                    );
+                  }, icon: Icons.search,
+                ),
+
+                const SizedBox(width: 10),
+
+                GestureDetector(
+                  onTap: () async {
+                    await themeProvider.isThemeDark();
+                    themeProvider.setTheme(themeProvider.isDark?ThemeMode.dark:ThemeMode.light);
+                  },
+                  child: Icon(themeProvider.isDark? Icons.dark_mode_outlined:Icons.light_mode),
+                ),
+
+              ],
+            ),
           )
         ],
-        backgroundColor: Colors.amber,
+        backgroundColor: Theme.of(context).primaryColor,
         toolbarHeight: height * 0.1,
       ),
 
@@ -409,7 +431,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      backgroundColor: Colors.white,
     );
   }
 
@@ -417,7 +438,7 @@ class _HomePageState extends State<HomePage> {
 
 
   PopupMenuButton<dynamic> _buildNotesPopupMenuButton(Notes data) {
-    return PopupMenuButton(color: Colors.amber,
+    return PopupMenuButton(color: Theme.of(context).primaryColor,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     itemBuilder: (context) => [
 
