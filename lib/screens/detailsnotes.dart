@@ -57,9 +57,11 @@ class _DetailsNotesState extends State<DetailsNotes> {
 
                   //Note Title
                   RichText(
-                  text: TextSpan(text: 'Title: ', style: const TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),
+                  text: TextSpan(text: 'Title: ',
+                      style: const TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),
                       children: [
-                        TextSpan(text: widget.title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.normal))
+                        TextSpan(text: widget.title,
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.normal))
                       ])
                   ),
 
@@ -116,91 +118,86 @@ class _DetailsNotesState extends State<DetailsNotes> {
   IconButton _buildShareButton(BuildContext context) {
     return IconButton(
         onPressed: () {
-        showModalBottomSheet(
-            context: context, builder: (context) =>
-          Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.all(10),
-            height: MediaQuery.sizeOf(context).height * 0.15,
-            width: MediaQuery.sizeOf(context).width,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-
-                Container(
-                  height: 10,
-                  width: 100,
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: Colors.amber),
-                ),
-                const Spacer(),
-
-                const Text('Choose Notes Sharing Method',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-                const Spacer(),
-
-                //Button
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+            showModalBottomSheet(
+                context: context, builder: (context) =>
+              Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(10),
+                height: MediaQuery.sizeOf(context).height * 0.15,
+                width: MediaQuery.sizeOf(context).width,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    _buildShareTextButton(),
-                    _buildScreenshotButton()
+
+                    Container(
+                      height: 10,
+                      width: 100,
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: Colors.amber),
+                    ),
+                    const Spacer(),
+
+                    const Text('Choose Notes Sharing Method',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    const Spacer(),
+
+                    //Button
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+
+                        /// Share Notes as Text Button
+                        MaterialButton(
+                          onPressed: () async {
+                            await Share.share('Title: ${widget.title}\nDetails: ${widget.description}\nTime: ${widget.time.toString().split(' ')[1].split('.')[0]}\nDate: ${widget.time.toString().split(' ')[0]}');
+                            debugPrint('Print');
+                          },
+                          color: Colors.amber,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text('Text'),
+                              Icon(Icons.text_fields_outlined)
+                            ],
+                          ),
+                        ),
+
+                        /// Share as Screenshots Button
+                        MaterialButton(
+                          onPressed: () async {
+                            final tempDir = await getTemporaryDirectory();
+                            final tempPath = tempDir.path;
+                            final tempFile = File('$tempPath/${widget.title}.png');
+                            final Uint8List? imageBytes = await _screenshotController.capture();
+                            await tempFile.writeAsBytes(imageBytes!);
+                            await Share.shareXFiles([XFile(tempFile.path)]);
+                          },
+                          color: Colors.amber,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text('Screenshot'),
+                              Icon(Icons.image)
+                            ],
+                          ),
+                        )
+
+                      ],
+                    ),
+                    SizedBox(
+                      height: MediaQuery.sizeOf(context).height * 0.02,
+                    )
                   ],
                 ),
-                SizedBox(
-                  height: MediaQuery.sizeOf(context).height * 0.02,
-                )
-              ],
-            ),
-          ),
-        isDismissible: true,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))
-      );
+              ),
+            isDismissible: true,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)));
         },
         icon: const Icon(Icons.share)
-    );
-  }
-
-  MaterialButton _buildShareTextButton() {
-    return MaterialButton(
-      onPressed: () async {
-        await Share.share('Title: ${widget.title}\nDetails: ${widget.description}\nTime: ${widget.time.toString().split(' ')[1].split('.')[0]}\nDate: ${widget.time.toString().split(' ')[0]}');
-        debugPrint('Print');
-      },
-      color: Colors.amber,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10)),
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text('Text'),
-          Icon(Icons.text_fields_outlined)
-        ],
-      ),
-    );
-  }
-
-  MaterialButton _buildScreenshotButton() {
-    return MaterialButton(
-      onPressed: () async {
-        final tempDir = await getTemporaryDirectory();
-        final tempPath = tempDir.path;
-        final tempFile = File('$tempPath/${widget.title}.png');
-
-        final Uint8List? imageBytes = await _screenshotController.capture();
-        await tempFile.writeAsBytes(imageBytes!);
-        await Share.shareXFiles([XFile(tempFile.path)]);
-      },
-      color: Colors.amber,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10)),
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Text('Screenshot'),
-          Icon(Icons.image)
-        ],
-      ),
     );
   }
 }

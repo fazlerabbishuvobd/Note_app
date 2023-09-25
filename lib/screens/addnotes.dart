@@ -83,9 +83,8 @@ class _AddNotesState extends State<AddNotes> {
               ),
 
               // Note Description
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
+
               const Text('Description',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),

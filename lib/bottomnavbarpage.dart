@@ -53,16 +53,56 @@ class _BottomNavBarPageState extends State<BottomNavBarPage> {
         controller: FloatingBottomBarController(initialIndex: 0),
         bottomBar: [
           //Home
-          buildBottomBarItemHome(),
+          BottomBarItem(
+          icon: const Icon(Icons.home_filled, size: 30),
+          iconSelected: const Icon(Icons.home_filled, color: Colors.red, size: 30),
+          title: 'Home',
+          dotColor: Colors.red,
+          onTap: (value) {
+            setState(() {
+              index = value;
+            });
+          },
+        ),
 
           //Stared
-          buildBottomBarItemStared(),
+          BottomBarItem(
+            icon: const Icon(Icons.star, size: 30),
+            iconSelected: const Icon(Icons.star, color: Colors.red, size: 30),
+            title: 'Stared',
+            dotColor: Colors.red,
+            onTap: (value) {
+              setState(() {
+                index = value;
+              });
+            },
+          ),
 
           //Category
-          buildBottomBarItemCategory(),
+          BottomBarItem(
+            icon: const Icon(Icons.folder_copy_rounded, size: 30),
+            iconSelected: const Icon(Icons.folder_copy_rounded, color: Colors.red, size: 30),
+            title: 'Folders',
+            dotColor: Colors.red,
+            onTap: (value) {
+              setState(() {
+                index = value;
+              });
+            },
+          ),
 
           //Profile
-          buildBottomBarItemProfile(),
+          BottomBarItem(
+            icon: const Icon(Icons.person, size: 30),
+            iconSelected: const Icon(Icons.person, color: Colors.red, size: 30),
+            title: 'Profile',
+            dotColor: Colors.red,
+            onTap: (value) {
+              setState(() {
+                index = value;
+              });
+            },
+          ),
         ],
         bottomBarCenterModel: BottomBarCenterModel(
           centerBackgroundColor: Colors.red,
@@ -74,111 +114,49 @@ class _BottomNavBarPageState extends State<BottomNavBarPage> {
           ),
           centerIconChild: [
             //Add Notes
-            _buildFloatingCenterButtonChildAddNotes(context),
+            FloatingCenterButtonChild(
+              child: const Icon(
+                Icons.note_add,
+                color: AppColors.white,
+              ),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const AddNotes(),
+                ));
+              },
+            ),
 
             //Add Folder
-            _buildFloatingCenterButtonChildAddFolder(context),
+            FloatingCenterButtonChild(
+              child: const Icon(
+                Icons.create_new_folder,
+                color: AppColors.white,
+              ),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return CustomDialogueBox(
+                      controller: folderNameController,
+                      title: 'New Folder Name',
+                      onPressedSave: () {
+                        Notes newFolder = Notes(category: folderNameController.text);
+                        DatabaseHelper.addCategory(newFolder);
+                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+                          builder: (context) => const BottomNavBarPage(),), (route) => false);
+                      },
+                    );
+                  },
+                ).then((value) {
+                  setState(() {});
+                });
+              },
+            ),
           ],
         ),
       ),
     );
   }
 
-  FloatingCenterButtonChild _buildFloatingCenterButtonChildAddFolder(BuildContext context) {
-    return FloatingCenterButtonChild(
-            child: const Icon(
-              Icons.create_new_folder,
-              color: AppColors.white,
-            ),
-            onTap: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return CustomDialogueBox(
-                    controller: folderNameController,
-                    title: 'New Folder Name',
-                    onPressedSave: () {
-                      Notes newFolder = Notes(category: folderNameController.text);
-                      DatabaseHelper.addCategory(newFolder);
-                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                            builder: (context) => const BottomNavBarPage(),), (route) => false);
-                    },
-                  );
-                },
-              ).then((value) {
-                setState(() {});
-              });
-            },
-          );
-  }
 
-  FloatingCenterButtonChild _buildFloatingCenterButtonChildAddNotes(BuildContext context) {
-    return FloatingCenterButtonChild(
-            child: const Icon(
-              Icons.note_add,
-              color: AppColors.white,
-            ),
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => AddNotes(),
-              ));
-            },
-          );
-  }
-
-  BottomBarItem buildBottomBarItemProfile() {
-    return BottomBarItem(
-          icon: const Icon(Icons.person, size: 30),
-          iconSelected: const Icon(Icons.person, color: Colors.red, size: 30),
-          title: 'Profile',
-          dotColor: Colors.red,
-          onTap: (value) {
-            setState(() {
-              index = value;
-            });
-          },
-        );
-  }
-
-  BottomBarItem buildBottomBarItemCategory() {
-    return BottomBarItem(
-          icon: const Icon(Icons.folder_copy_rounded, size: 30),
-          iconSelected: const Icon(Icons.folder_copy_rounded, color: Colors.red, size: 30),
-          title: 'Folders',
-          dotColor: Colors.red,
-          onTap: (value) {
-            setState(() {
-              index = value;
-            });
-          },
-        );
-  }
-
-  BottomBarItem buildBottomBarItemStared() {
-    return BottomBarItem(
-          icon: const Icon(Icons.star, size: 30),
-          iconSelected: const Icon(Icons.star, color: Colors.red, size: 30),
-          title: 'Stared',
-          dotColor: Colors.red,
-          onTap: (value) {
-            setState(() {
-              index = value;
-            });
-          },
-        );
-  }
-
-  BottomBarItem buildBottomBarItemHome() {
-    return BottomBarItem(
-          icon: const Icon(Icons.home_filled, size: 30),
-          iconSelected: const Icon(Icons.home_filled, color: Colors.red, size: 30),
-          title: 'Home',
-          dotColor: Colors.red,
-          onTap: (value) {
-            setState(() {
-              index = value;
-            });
-          },
-        );
-  }
 }

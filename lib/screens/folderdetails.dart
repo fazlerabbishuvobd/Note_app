@@ -25,6 +25,7 @@ class _FolderDetailsState extends State<FolderDetails> {
         centerTitle: true,
         backgroundColor: Colors.amber,
       ),
+
       body: FutureBuilder<List<Notes>?>(
         future: DatabaseHelper.getAllNotes(),
         builder: (context, snapshot) {
@@ -67,8 +68,7 @@ class _FolderDetailsState extends State<FolderDetails> {
                                   margin: const EdgeInsets.symmetric(vertical: 5),
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(
-                                      borderRadius:
-                                      BorderRadius.circular(15),
+                                      borderRadius: BorderRadius.circular(15),
                                       border: Border.all(color: Colors.amber, width: 1)
                                   ),
                                   height: MediaQuery.of(context).size.height * 0.13,
@@ -78,9 +78,7 @@ class _FolderDetailsState extends State<FolderDetails> {
                                   child: ListTile(
                                     leading: CircleAvatar(
                                         radius: 30,
-                                        child: Image.asset('assets/images/note.png',
-                                          fit: BoxFit.cover,
-                                        )
+                                        child: Image.asset('assets/images/note.png', fit: BoxFit.cover)
                                     ),
                                     title: Text(data.title.toString(), overflow: TextOverflow.ellipsis),
                                     subtitle: Text(DateTime.now().toString().split(' ')[0]),
@@ -220,7 +218,7 @@ class _FolderDetailsState extends State<FolderDetails> {
           borderRadius: BorderRadius.circular(50),
         ),
         onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => AddNotes(folderName: widget.folderTitle),)
+          builder: (context) => AddNotes(folderName: widget.folderTitle))
         ),
         backgroundColor: Colors.amber,
         child: const Icon(Icons.add),

@@ -11,7 +11,11 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(),
+      appBar: AppBar(
+        title: const Text('Profile'),
+        centerTitle: true,
+        backgroundColor: Colors.amber,
+      ),
       body: Container(
         alignment: Alignment.center,
         padding: const EdgeInsets.all(10),
@@ -34,9 +38,24 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(
               height: 20,
             ),
-            _buildName(),
-            _buildPosition(),
-            _buildLocation(),
+            const CustomCard(
+              icon: Icons.person,
+              title: 'Name',
+              details: 'Fazle Rabbi',
+            ),
+
+
+            const CustomCard(
+              icon: Icons.work_history_outlined,
+              title: 'Position',
+              details: 'Flutter Developer',
+            ),
+
+            const CustomCard(
+              icon: Icons.location_on,
+              title: 'Location',
+              details: 'Mohammadpur,Dhaka',
+            ),
           ],
         ),
       ),
@@ -59,28 +78,27 @@ class _ProfilePageState extends State<ProfilePage> {
                     width: 100,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
-                        color: Colors.amber),
+                        color: Colors.amber
+                    ),
                   ),
                   const Spacer(),
-                  const Text(
-                    'Choose Profile Picture From',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 16),
+
+                  const Text('Choose Profile Picture From',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   const Spacer(),
+
                   Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       MaterialButton(
                         onPressed: () {},
                         color: Colors.amber,
                         shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(10)),
+                            borderRadius: BorderRadius.circular(10)
+                        ),
                         child: const Row(
-                          mainAxisAlignment:
-                              MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Text('Camera'),
                             Icon(Icons.camera_alt_rounded)
@@ -91,11 +109,10 @@ class _ProfilePageState extends State<ProfilePage> {
                         onPressed: () {},
                         color: Colors.amber,
                         shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(10)),
+                            borderRadius: BorderRadius.circular(10)
+                        ),
                         child: const Row(
-                          mainAxisAlignment:
-                              MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Text('Gallery'),
                             Icon(Icons.image_rounded)
@@ -113,103 +130,48 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
         isDismissible: true,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15))
+            borderRadius: BorderRadius.circular(15)
+        )
     );
   }
+}
 
-  Card _buildLocation() {
-    return Card(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-          side: const BorderSide(color: Colors.black, width: 1)),
-      color: Colors.amber,
-      child: const SizedBox(
-        height: 50,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Icon(Icons.location_on),
-              SizedBox(
-                width: 10,
-              ),
-              Text('Location'),
-              Spacer(),
-              Text(
-                'Dhaka, Bangladesh',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-  Card _buildPosition() {
-    return Card(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-          side: const BorderSide(color: Colors.black, width: 1)),
-      color: Colors.amber,
-      child: const SizedBox(
-        height: 50,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Icon(Icons.work),
-              SizedBox(
-                width: 10,
-              ),
-              Text('Position'),
-              Spacer(),
-              Text('Flutter Developer',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-  Card _buildName() {
+class CustomCard extends StatelessWidget {
+  const CustomCard({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.details,
+  });
+
+  final IconData icon;
+  final String title,details;
+  @override
+  Widget build(BuildContext context) {
     return Card(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
           side: const BorderSide(color: Colors.black, width: 1)
       ),
       color: Colors.amber,
-      child: const SizedBox(
+      child: SizedBox(
         height: 50,
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Icon(Icons.person),
-              SizedBox(
-                width: 10,
-              ),
-              Text('Name'),
-              Spacer(),
-              Text('Fazle Rabbi',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              )
+              Icon(icon),
+              const SizedBox(width: 10),
+
+              Text(title),
+              const Spacer(),
+
+              Text(details, style: const TextStyle(fontWeight: FontWeight.bold),)
             ],
           ),
         ),
       ),
-    );
-  }
-  AppBar _buildAppBar() {
-    return AppBar(
-      title: const Text('Profile'),
-      actions: [
-        IconButton(onPressed: () {}, icon: const Icon(Icons.edit_note_rounded))
-      ],
-      backgroundColor: Colors.amber,
     );
   }
 }

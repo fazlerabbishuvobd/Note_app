@@ -31,7 +31,7 @@ class _StaredPageState extends State<StaredPage> {
               onPressed: () {
                 setState(() {});
               },
-              icon: const Icon(Icons.refresh)),
+              icon: const Icon(Icons.star)),
         ],
         backgroundColor: Colors.amber,
         toolbarHeight: height * 0.1,
@@ -55,10 +55,25 @@ class _StaredPageState extends State<StaredPage> {
 
                   // Main Part
                   folderAmount = snapshot.data!.length;
+
                   return Column(
                     children: [
                       //Folder Title
-                      _buildFolderTitle(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Text('All Stared Folder',
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            folderAmount == null ? '(0)' : '($folderAmount)',
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
+                          ),
+                        ],
+                      ),
 
                       //Folder Main Body
                       Container(
@@ -152,16 +167,31 @@ class _StaredPageState extends State<StaredPage> {
                         height: 10,
                       ),
 
-                      _buildNoteTitle(),
+                      // Note Title
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Text('All Stared Notes',
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Text(noteAmount == null ? '(0)' : '($noteAmount)',
+                            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
+                          ),
+                        ],
+                      ),
 
-                      //<-------------- Note Main Body ------------->
+
+                      //********** Note Main Body ********
                       SizedBox(
                           height: height * 0.6,
                           child: ListView.builder(
                               physics: const BouncingScrollPhysics(),
                               itemBuilder: (context, index) {
-                                //<-------- Initialized Variable ---------
-                                // >
+
                                 var data = snapshot.data![index];
                                 noteAmount = snapshot.data!.length;
 
@@ -176,14 +206,34 @@ class _StaredPageState extends State<StaredPage> {
                                         folderName: data.category,
                                         time: data.dateTime,
                                         isStared: data.isStared,
-                                      ),
-                                    ));
+                                      )
+                                    )
+                                    );
                                   },
                                   child: Stack(
                                     children: [
-                                      _buildNoteBody(height, width, data, context),
 
-                                      //<-------- Notes Right Side Category Badge --------->
+                                      //************* Note Body ***********************
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(vertical: 5),
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(15),
+                                            border: Border.all(color: Colors.amber, width: 1)),
+                                        height: height * 0.12,
+                                        width: width,
+                                        child: ListTile(
+                                          leading: CircleAvatar(
+                                              radius: 30,
+                                              child: Image.asset('assets/images/note.png', fit: BoxFit.cover,)
+                                          ),
+                                          title: Text(data.title!, overflow: TextOverflow.ellipsis,),
+                                          subtitle: Text(data.dateTime.toString().split(' ')[0]),
+                                          trailing: _buildNoteStaredButton(data, context),
+                                        ),
+                                      ),
+
+                                      //******** Note Category Badge *********
                                       CategoryBadge(
                                         height: height,
                                         width: width,
@@ -197,7 +247,15 @@ class _StaredPageState extends State<StaredPage> {
                                       ),
 
                                       //<-------------- Index Number ------------->
-                                      _buildNoteIndexNumber(index),
+                                      Positioned(
+                                          child: CircleAvatar(
+                                              radius: 12,
+                                              backgroundColor: Colors.amber,
+                                              child: Text('${index + 1}',
+                                                style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                                              )
+                                          )
+                                      )
                                     ],
                                   ),
                                 );
@@ -223,39 +281,6 @@ class _StaredPageState extends State<StaredPage> {
     );
   }
 
-  Positioned _buildNoteIndexNumber(int index) {
-    return Positioned(
-      child: CircleAvatar(
-          radius: 12,
-          backgroundColor: Colors.amber,
-          child: Text('${index + 1}',
-            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-          )
-      )
-  );
-  }
-
-  Container _buildNoteBody(double height, double width, Notes data, BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          border: Border.all(color: Colors.amber, width: 1)),
-      height: height * 0.12,
-      width: width,
-      child: ListTile(
-        leading: CircleAvatar(
-            radius: 30,
-            child: Image.asset('assets/images/note.png',
-              fit: BoxFit.cover,
-            )),
-        title: Text(data.title!, overflow: TextOverflow.ellipsis,),
-        subtitle: Text(data.dateTime.toString().split(' ')[0]),
-        trailing: _buildNoteStaredButton(data, context),
-      ),
-    );
-  }
 
   IconButton _buildNoteStaredButton(Notes data, BuildContext context) {
     return IconButton(
@@ -264,49 +289,14 @@ class _StaredPageState extends State<StaredPage> {
         DatabaseHelper.removeStaredNote(data).then((value) {
           setState(() {});
         }).then((value) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text('Remove Notes From Stared Successfully')));
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                  content: Text('Remove Notes From Stared Successfully')
+              )
+          );
         });
       },
       icon: const Icon(Icons.star)
-    );
-  }
-
-  Row _buildNoteTitle() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        const Text('All Stared Notes',
-          style: TextStyle(
-              fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(
-          width: 10,
-        ),
-        Text(noteAmount == null ? '(0)' : '($noteAmount)',
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
-        ),
-      ],
-    );
-  }
-
-
-
-  Row _buildFolderTitle() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        const Text('All Stared Folder',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(
-          width: 10,
-        ),
-        Text(
-          folderAmount == null ? '(0)' : '($folderAmount)',
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
-        ),
-      ],
     );
   }
 

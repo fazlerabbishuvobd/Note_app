@@ -17,7 +17,7 @@ class DatabaseHelper {
   static const String column5 = 'dateTime';
   static const String column6 = 'isStared';
 
-//<------------- Database Initialization --------------------------->
+//************************* Database Initialization **********************
   static Future<Database> getDb() async {
     var databasesPath = await getDatabasesPath();
     return openDatabase(join(databasesPath, databaseName),
@@ -30,7 +30,7 @@ class DatabaseHelper {
     }, version: version);
   }
 
-  //<------------- Notes Database--------------------------->
+  // *********************** Notes Database *******************************
   static Future<void> _createTable1(Database db) async {
     await db.execute(
       "CREATE TABLE $tableName1("
@@ -84,7 +84,7 @@ class DatabaseHelper {
   }
 
 
-  //<------------ Folder Database----------------------------->
+  // **************** Folder Database *******************************
   static Future<void> _createTable2(Database db) async {
     await db.execute(
       "CREATE TABLE $tableName2("
@@ -139,7 +139,7 @@ class DatabaseHelper {
   }
 
 
-  // <------------------- Stared Database ----------------------------------->
+  //*********************** Stared Note/Folder Database ********************
   static Future<void> _createTable3(Database db) async {
     await db.execute(
       "CREATE TABLE $tableName3("
@@ -166,7 +166,8 @@ class DatabaseHelper {
     );
   }
 
-  //<------------------------ Stared Notes Database------------------------------>
+
+  //***************** Stared Notes Database *******************************
   static Future<int> addStaredNote(Notes notes) async {
     final db = await getDb();
     return await db.insert(tableName3, notes.toJson(),
@@ -208,8 +209,7 @@ class DatabaseHelper {
 
 
 
-  //<------------------------- Stared Folder Database-------------------------------------->
-
+  ///**************** Stared Folder Database *************************
   //Add New Folder
   static Future<int> addStaredFolder(Notes notes) async {
     final db = await getDb();

@@ -26,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            SizedBox(height: MediaQuery.sizeOf(context).height * 0.2,),
+            SizedBox(height: MediaQuery.sizeOf(context).height * 0.2),
 
             //AppIcon
             CircleAvatar(
@@ -38,11 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
             ),
 
-            SizedBox(
-              height: MediaQuery
-                  .sizeOf(context)
-                  .height * 0.05,
-            ),
+            SizedBox(height: MediaQuery.sizeOf(context).height * 0.05,),
 
             Column(
               children: [
@@ -51,9 +47,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   size: 50.0,
                 ),
                 SizedBox(
-                  height: MediaQuery
-                      .sizeOf(context)
-                      .height * 0.05,
+                  height: MediaQuery.sizeOf(context).height * 0.05,
                 ),
 
                 const Text('Design & Developed By',

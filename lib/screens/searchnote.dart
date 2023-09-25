@@ -86,7 +86,7 @@ class _SearchNoteState extends State<SearchNote> {
                   return Text(snapshot.hasError.toString());
                 } else if (snapshot.hasData) {
 
-                  //<-------------- Search Result Filter ------------->
+                  //********** Search Result Filter ***************
                   List<Notes> searchNote = snapshot.data!.where((element) => element.title!.toLowerCase().contains(searchWord.toLowerCase())).toList();
 
                   return searchNote.isEmpty ? const Text('No Result Found') : _buildNoteList(searchNote, height, width);
@@ -133,9 +133,7 @@ class _SearchNoteState extends State<SearchNote> {
                   child: ListTile(
                       leading: CircleAvatar(
                           radius: 30,
-                          child: Image.asset('assets/images/note.png',
-                            fit: BoxFit.cover,
-                          )
+                          child: Image.asset('assets/images/note.png', fit: BoxFit.cover)
                       ),
                       title: Text(data.title!, overflow: TextOverflow.ellipsis,),
                       subtitle: Text(data.dateTime.toString().split(' ')[0]),
@@ -143,17 +141,46 @@ class _SearchNoteState extends State<SearchNote> {
                   ),
                 ),
 
-                //<-------- Notes Right Side Category Badge --------->
-                _buildCategoryBadge(height, width, data, index),
+                //************* Notes Right Side Category Badge **************
+                CategoryBadge(
+                    height: height,
+                    width: width,
+                    data: data,
+                    colorSerial: index % 10
+                ),
 
-                //<-------- Notes Left Side Design --------->
+                //**************** Notes Left Side Design ****************
                 ListLeadingDesign(colorSerial: index % 10),
 
-                //<-------------- Index Number ------------->
-                _buildIndexNumber(index),
+                //**************** Index Number ****************
+                Positioned(
+                    child: CircleAvatar(
+                        radius: 12,
+                        backgroundColor: Colors.amber,
+                        child: Text('${index + 1}',
+                          style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                        )
+                    )
+                ),
 
-                //<-------------- Stared Button ------------->
-                _buildStaredButton(data)
+                //**************** Stared Button ****************
+                Positioned(
+                    bottom: 0,
+                    right: 1,
+                    child: IconButton(
+                        onPressed: () async {
+                          if (data.isStared == null || data.isStared == 0) {
+                            DatabaseHelper.isStaredNote(data, 1);
+                            DatabaseHelper.addStaredNote(data);
+                          } else {
+                            DatabaseHelper.isStaredNote(data, 0);
+                            DatabaseHelper.removeStaredNote(data);
+                          }
+                          setState(() {});
+                        },
+                        icon: Icon(data.isStared == 1 ? Icons.star : Icons.star_border)
+                    )
+                )
               ],
             ),
           );
@@ -171,114 +198,69 @@ class _SearchNoteState extends State<SearchNote> {
           borderRadius: BorderRadius.circular(10)
       ),
       itemBuilder: (context) => [
-        _popupMenuItemEdit(context),
-        _popupMenuItemDelete(data, context),
-        _popupMenuItemStared(data, context),
+
+        //************** Edit Button ******************
+        PopupMenuItem(
+            child: InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: const Row(
+                mainAxisAlignment:
+                MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text('Edit'),
+                  Icon(Icons.edit),
+                ],
+              ),
+            )
+        ),
+
+        //************* Delete Button *****************
+        PopupMenuItem(
+            child: InkWell(
+              onTap: () {
+                DatabaseHelper.deleteNote(data).then((value) {
+                  setState(() {});
+                });
+                DatabaseHelper.removeStaredNote(data);
+                Navigator.pop(context);
+              },
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text('Delete'),
+                  Icon(Icons.delete),
+                ],
+              ),
+            )
+        ),
+
+        //************* Stared Button *****************
+        PopupMenuItem(
+            child: InkWell(
+              onTap: () {
+                if (data.isStared == null || data.isStared == 0) {
+                  DatabaseHelper.isStaredNote(data, 1);
+                  DatabaseHelper.addStaredNote(data);
+                } else {
+                  DatabaseHelper.isStaredNote(data, 0);
+                  DatabaseHelper.removeStaredNote(data);
+                }
+                setState(() {});
+                Navigator.pop(context);
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(data.isStared == 1 ? 'Unstared' : 'Stared'),
+                  Icon(data.isStared == 1 ? Icons.star : Icons.star_border),
+                ],
+              ),
+            )
+        )
       ],
     );
   }
 
-  PopupMenuItem<dynamic> _popupMenuItemStared(Notes data, BuildContext context) {
-    return PopupMenuItem(
-      child: InkWell(
-        onTap: () {
-          if (data.isStared == null || data.isStared == 0) {
-            DatabaseHelper.isStaredNote(data, 1);
-            DatabaseHelper.addStaredNote(data);
-          } else {
-            DatabaseHelper.isStaredNote(data, 0);
-            DatabaseHelper.removeStaredNote(data);
-          }
-          setState(() {});
-          Navigator.pop(context);
-        },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text(data.isStared == 1 ? 'Unstared' : 'Stared'),
-            Icon(data.isStared == 1 ? Icons.star : Icons.star_border),
-          ],
-        ),
-      )
-    );
-  }
-
-  PopupMenuItem<dynamic> _popupMenuItemDelete(Notes data, BuildContext context) {
-    return PopupMenuItem(
-        child: InkWell(
-          onTap: () {
-            DatabaseHelper.deleteNote(data).then((value) {
-              setState(() {});
-            });
-            DatabaseHelper.removeStaredNote(data);
-            Navigator.pop(context);
-          },
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Text('Delete'),
-              Icon(Icons.delete),
-            ],
-          ),
-        )
-    );
-  }
-
-  PopupMenuItem<dynamic> _popupMenuItemEdit(BuildContext context) {
-    return PopupMenuItem(
-        child: InkWell(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: const Row(
-            mainAxisAlignment:
-                MainAxisAlignment.spaceEvenly,
-            children: [
-              Text('Edit'),
-              Icon(Icons.edit),
-            ],
-          ),
-        )
-    );
-  }
-
-  CategoryBadge _buildCategoryBadge(double height, double width, Notes data, int index) {
-    return CategoryBadge(
-      height: height,
-      width: width,
-      data: data,
-      colorSerial: index % 10);
-  }
-
-  Positioned _buildIndexNumber(int index) {
-    return Positioned(
-      child: CircleAvatar(
-          radius: 12,
-          backgroundColor: Colors.amber,
-          child: Text('${index + 1}',
-            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-          )
-      )
-  );
-  }
-
-  Positioned _buildStaredButton(Notes data) {
-    return Positioned(
-      bottom: 0,
-      right: 1,
-      child: IconButton(
-          onPressed: () async {
-            if (data.isStared == null || data.isStared == 0) {
-              DatabaseHelper.isStaredNote(data, 1);
-              DatabaseHelper.addStaredNote(data);
-            } else {
-              DatabaseHelper.isStaredNote(data, 0);
-              DatabaseHelper.removeStaredNote(data);
-            }
-            setState(() {});
-          },
-          icon: Icon(data.isStared == 1 ? Icons.star : Icons.star_border)
-      )
-  );
-  }
 }

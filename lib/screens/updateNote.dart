@@ -103,9 +103,7 @@ class _UpdateNotesState extends State<UpdateNotes> {
               ),
 
 
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
 
               //Note Description
               const Text('Description',

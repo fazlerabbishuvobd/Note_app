@@ -21,16 +21,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int? totalFolders;
   int? totalNotes;
-  late final TextEditingController _renameFolderController;
 
-  @override
-  void initState() {
-    _renameFolderController = TextEditingController();
-    setState(() {
-
-    });
-    super.initState();
-  }
+  final _renameFolderController = TextEditingController();
 
   @override
   void dispose() {
@@ -48,16 +40,14 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text('Note App'),
         centerTitle: true,
-        leading: IconButton(onPressed: () {
-          setState(() {});
-        }, icon: const Icon(Icons.refresh)),
+        leading: IconButton(onPressed: () {}, icon: const Icon(Icons.menu)),
         actions: [
-          //<-------- Search Button--------->
           CustomIconButton(
-            onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => const SearchNote(),)
-            ),
-            icon: Icons.manage_search_rounded,
+            onPressed: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const SearchNote())
+              );
+            }, icon: Icons.search,
           )
         ],
         backgroundColor: Colors.amber,
@@ -92,7 +82,7 @@ class _HomePageState extends State<HomePage> {
                               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(width: 10,),
-                            Text(totalFolders == null ? '(0)' : '($totalFolders)',
+                            Text(totalFolders == 0 ? '(0)' : '($totalFolders)',
                               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
                             ),
                           ],
@@ -114,8 +104,9 @@ class _HomePageState extends State<HomePage> {
                                 //<-------- Folder List Structure --------->
                                 return GestureDetector(
                                   onTap: () {
-                                    Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => FolderDetails(folderTitle: '${data.category}'),));
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(builder: (context) => FolderDetails(folderTitle: '${data.category}'))
+                                    );
                                   },
                                   child: Stack(
                                     children: [
@@ -224,7 +215,23 @@ class _HomePageState extends State<HomePage> {
                                           ],
                                         ),
                                       ),
-                                      _buildFolderStaredButton(width, data),
+
+                                      Positioned(
+                                          left: width * 0.02,
+                                          child: IconButton(
+                                              onPressed: () {
+                                                if (data.isStared == null || data.isStared == 0) {
+                                                  DatabaseHelper.isStaredFolder(data, 1);
+                                                  DatabaseHelper.addStaredFolder(data);
+                                                } else {
+                                                  DatabaseHelper.isStaredFolder(data, 0);
+                                                  DatabaseHelper.removeStaredFolder(data);
+                                                }
+                                                setState(() {});
+                                              },
+                                              icon: Icon(data.isStared == 1 ? Icons.star : Icons.star_border)
+                                          )
+                                      ),
                                     ],
                                   ),
                                 );
@@ -247,12 +254,11 @@ class _HomePageState extends State<HomePage> {
                   }
                 },
               ),
+              const SizedBox(height: 10,),
 
 
 
               //Note part
-              const SizedBox(height: 10,),
-
               FutureBuilder<List<Notes>?>(
                 future: DatabaseHelper.getAllNotes(),
                 builder: (context, AsyncSnapshot<List<Notes>?> snapshot) {
@@ -272,8 +278,7 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             const Text('Notes', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                             const SizedBox(width: 10,),
-                            Text(
-                              totalNotes == null ? '(0)' : '($totalNotes)',
+                            Text(totalNotes == null ? '(0)' : '($totalNotes)',
                               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
                             ),
                           ],
@@ -291,9 +296,7 @@ class _HomePageState extends State<HomePage> {
                                   shrinkWrap: true,
                                   physics: const NeverScrollableScrollPhysics(),
                                   itemBuilder: (context, index) {
-
                                     var data = snapshot.data![index];
-
                                     return GestureDetector(
                                       onTap: () {
                                         Navigator.of(context).push(MaterialPageRoute(
@@ -309,6 +312,7 @@ class _HomePageState extends State<HomePage> {
                                       },
                                       child: Stack(
                                         children: [
+
                                           //Note List Body
                                           Container(
                                             margin: const EdgeInsets.symmetric(vertical: 5),
@@ -357,14 +361,11 @@ class _HomePageState extends State<HomePage> {
                                                     if (data.isStared == null || data.isStared == 0) {
                                                       DatabaseHelper.isStaredNote(data, 1);
                                                       DatabaseHelper.addStaredNote(data);
-
                                                       ScaffoldMessenger.of(context).showSnackBar(
-                                                        SnackBar(
-                                                          content: const Text('Folder Mark as Stared Successfully',
+                                                        SnackBar(content: const Text('Folder Mark as Stared Successfully',
                                                             style: TextStyle(fontWeight: FontWeight.bold),
                                                           ),
-                                                          shape: RoundedRectangleBorder(
-                                                              borderRadius: BorderRadius.circular(15)),
+                                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                                                           duration: const Duration(milliseconds: 1500),
                                                           action: SnackBarAction(label: 'Close', onPressed: (){}),
                                                         ),
@@ -373,7 +374,15 @@ class _HomePageState extends State<HomePage> {
                                                       DatabaseHelper.isStaredNote(data, 0);
                                                       DatabaseHelper.removeStaredNote(data);
 
-                                                      ScaffoldMessenger.of(context).showSnackBar(_buildFolderSnackBar(),);
+                                                      ScaffoldMessenger.of(context).showSnackBar(
+                                                          SnackBar(
+                                                            content: const Text('Folder UnMark as Stared Successfully',
+                                                              style: TextStyle(fontWeight: FontWeight.bold)),
+                                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                                                            duration: const Duration(milliseconds: 1500),
+                                                            action: SnackBarAction(label: 'Close', onPressed: (){})
+                                                          )
+                                                      );
                                                     }
                                                     setState(() {});
                                                   },
@@ -406,17 +415,6 @@ class _HomePageState extends State<HomePage> {
 
 
 
-  SnackBar _buildFolderSnackBar() {
-    return SnackBar(
-      content: const Text('Folder UnMark as Stared Successfully',
-        style: TextStyle(fontWeight: FontWeight.bold),
-      ),
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15)),
-      duration: const Duration(milliseconds: 1500),
-      action: SnackBarAction(label: 'Close', onPressed: (){}),
-    );
-  }
 
   PopupMenuButton<dynamic> _buildNotesPopupMenuButton(Notes data) {
     return PopupMenuButton(color: Colors.amber,
@@ -504,26 +502,6 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
        )
-    );
-  }
-
-
-  Widget _buildFolderStaredButton(double width, Notes data) {
-    return Positioned(
-      left: width * 0.02,
-      child: IconButton(
-          onPressed: () {
-            if (data.isStared == null || data.isStared == 0) {
-              DatabaseHelper.isStaredFolder(data, 1);
-              DatabaseHelper.addStaredFolder(data);
-            } else {
-              DatabaseHelper.isStaredFolder(data, 0);
-              DatabaseHelper.removeStaredFolder(data);
-            }
-            setState(() {});
-          },
-          icon: Icon(data.isStared == 1 ? Icons.star : Icons.star_border)
-      )
     );
   }
 
