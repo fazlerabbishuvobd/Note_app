@@ -43,6 +43,7 @@ class _SearchNoteState extends State<SearchNote> {
                   margin: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
+                      color: Theme.of(context).disabledColor,
                       border: Border.all(color: Colors.black, width: 1)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -116,7 +117,7 @@ class _SearchNoteState extends State<SearchNote> {
                   description: data.description,
                   folderName: data.category,
                   time: data.dateTime,
-                  isStared: data.isStared!,
+                  isStared: data.isStared,
                 ),
               ));
             },

@@ -187,7 +187,7 @@ class _StaredPageState extends State<StaredPage> {
 
                       //********** Note Main Body ********
                       SizedBox(
-                          height: height * 0.6,
+                          height: height * 0.58,
                           child: ListView.builder(
                               physics: const BouncingScrollPhysics(),
                               itemBuilder: (context, index) {

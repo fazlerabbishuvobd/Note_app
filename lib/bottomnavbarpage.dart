@@ -152,6 +152,15 @@ class _BottomNavBarPageState extends State<BottomNavBarPage> {
                 });
               },
             ),
+
+            //Cancel
+            FloatingCenterButtonChild(
+              child: const Icon(
+                Icons.cancel_outlined,
+                color: AppColors.white,
+              ),
+              onTap: () => debugPrint('Cancel'),
+            ),
           ],
         ),
       ),

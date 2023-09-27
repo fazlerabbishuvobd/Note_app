@@ -123,7 +123,7 @@ class _DetailsNotesState extends State<DetailsNotes> {
               Container(
                 alignment: Alignment.center,
                 padding: const EdgeInsets.all(10),
-                height: MediaQuery.sizeOf(context).height * 0.15,
+                height: MediaQuery.sizeOf(context).height * 0.17,
                 width: MediaQuery.sizeOf(context).width,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -189,7 +189,7 @@ class _DetailsNotesState extends State<DetailsNotes> {
                       ],
                     ),
                     SizedBox(
-                      height: MediaQuery.sizeOf(context).height * 0.02,
+                      height: MediaQuery.sizeOf(context).height * 0.01,
                     )
                   ],
                 ),
